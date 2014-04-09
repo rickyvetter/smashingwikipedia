@@ -16,39 +16,9 @@
     </div>
 
     <div class="row">
-      <div class="large-12 columns">
-        <div class="callout panel">
-          <p><strong>This is a twelve column section in a row.</strong> Each of these includes a div.panel element so you can see where the columns are - it's not required at all for the grid.</p>
-        </div>
+      <div id="article" class="large-8 medium-8 small-12 columns">
       </div>
-    </div>
-    <div class="row">
-      <div class="large-6 medium-6 columns">
-        <div class="callout panel">
-          <p>Six columns</p>
-        </div>
-      </div>
-      <div class="large-6 medium-6 columns">
-        <div class="callout panel">
-          <p>Six columns</p>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="large-4 medium-4 small-4 columns">
-        <div class="callout panel">
-          <p>Four columns</p>
-        </div>
-      </div>
-      <div class="large-4 medium-4 small-4 columns">
-        <div class="callout panel">
-          <p>Four columns</p>
-        </div>
-      </div>
-      <div class="large-4 medium-4 small-4 columns">
-        <div class="callout panel">
-          <p>Four columns</p>
-        </div>
+      <div id="article-list" class="large-4 medium-4 small-12 columns">
       </div>
     </div>
     
@@ -59,22 +29,81 @@
       $(document).foundation();
     </script>
     <script>
+
     $(document).ready(function(){
-    $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=5&callback=?", function( data ) {
-    		var items = [];
-    		$.each( data.query.random, function( key, article ) {
-					items.push( "<li id='" + article.id + "'>" + article.title + "</li>" );
-				});
+	    $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
+	    		getFirstParagraph(data.query.random[0]["title"]);
+	    });
+    });
+
+    $(document).ready(function(){
+	    $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=5&callback=?", function( data ) {
+	    		var items = [];
+	    		$.each( data.query.random, function( key, article ) {
+						items.push( "<li id='" + article.id + "'>" + article.title + "</li>" );
+					});
+
+					$( "<ul/>", {
+						"class": "article-list",
+						html: items.join( "" )
+					}).appendTo( "#article-list" );
+	    });
+    });
+
+    function getFirstParagraph(title)
+    {
+
+   //  	$.getJSON( "http://en.wikipedia.org/w/api.php?action=parse&page=" + title + "&prop=text&format=json&callback=?", function( data ) {
+   //  	//$.getJSON( "http://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exlimit=10&exintro=&titles=" + title, function( data ) {
+
+  	// 		var items = [];
+
+  	// 		var content = data.parse.text["*"];
+  	// 		//var content = data.query.pages[0]["extract"];
+
+
+			// 	//var firstPara = $('p', content).first().html();
+
+			// 	items.push( "<div id='title'><h1>" + data.parse.title + "</h1></div>" );
+			// 	items.push( "<div id='text'>" + content + "</div><hr>" );
+
+
+			// 	$( "<ul/>", {
+			// 		"class": "article-list",
+			// 		html: items.join( "" )
+			// 	}).appendTo( "#article" );
+			// });
+
+
+
+    	//$.getJSON( "http://en.wikipedia.org/w/api.php?action=parse&page=" + title + "&prop=text&format=json&callback=?", function( data ) {
+    	$.getJSON( "http://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exlimit=10&exintro=&titles=" + title + "&callback=?", function( data ) {
+
+  			var items = [];
+
+  			//var content = data.parse.text["*"];
+  			for (var key in data.query.pages) {
+				    articleID = data.query.pages[key];
+				    articleTitle = data.query.pages[key].title;
+				    articleExtract = data.query.pages[key].extract;
+				}
+				var content = articleExtract;
+
+				items.push( "<div id='title'><h1>" + articleTitle + "</h1></div>" );
+				items.push( "<div id='text'>" + content + "</div><hr>" );
+
 
 				$( "<ul/>", {
 					"class": "article-list",
 					html: items.join( "" )
-				}).appendTo( "body" );
+				}).appendTo( "#article" );
+			});
 
-      console.log(data.query.random);
-    });
-    });
 
+    }
+
+
+    
     </script>
   </body>
 </html>

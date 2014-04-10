@@ -20,11 +20,11 @@
   	<ul class="title-area">
   			<li class="name">
   				<h1>
-  					<a href="#">Smashing Wikipedia</a>
+  					<a href="#/">Smashing Wikipedia</a>
   				</h1>
   			</li>
   			<li class="toggle-topbar">
-  				<a class="random-button button" href="#">Random!</a>
+  				<a class="random-button button" href="#/">Random!</a>
   			</li>
   		</ul>
   	</nav>
@@ -34,11 +34,11 @@
       	<div id="wiki-article">
           Loading Wikipedia article...
       	</div>
-      	<a class="random-button button expand" href="#">Smash a random article!</a>
+      	<a class="random-button button expand" href="#/">Smash a random article!</a>
       </div>
       <div id="article-list" class="large-4 medium-4 small-12 columns">
         <p>Smash count: <span id="smash">0</span></p>
-      	<p>Some carefully curated articles for your smashing enjoyment:</p>
+      	<p>Some carefully curated articles for your smashing enjoyment (just kidding, these are also random):</p>
       </div>
     </div>
     
@@ -49,7 +49,7 @@
     </script>
     <script>
 
-    var articleTitle;
+    //var articleTitle;
 
     $(document).ready(function(){
 	    findRandomArticle();
@@ -59,7 +59,7 @@
 	    $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=6&callback=?", function( data ) {
 	    		var items = [];
 	    		$.each( data.query.random, function( key, article ) {
-						items.push( "<div class='article-button-container large-12 medium-12 small-12 columns'><a href='#" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a></div>" );
+						items.push( "<div class='article-button-container large-12 medium-12 small-12 columns'><a href='#/" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a></div>" );
 					});
 
 					$( "<div/>", {
@@ -75,7 +75,7 @@
     	$.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
 	    		title = data.query.random[0]["title"];
           if (redirect){
-            window.location.href = "#" + title;
+            window.location.href = "#/" + title;
           }
           return title;
 	    });
@@ -94,7 +94,7 @@
 				}
 				var content = articleExtract;
 
-				items.push( "<div id='title'><h1><a href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>" + articleTitle + "</a></h1></div>" );
+				items.push( "<div id='title'><h1><a id='link-to-wiki' href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>" + articleTitle + "</a></h1></div>" );
 				items.push( "<div id='text'>" + content + "<p><a href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>Read more on Wikipedia...</a></p></div><hr>" );
 
 				$("#wiki-article").contents().remove();
@@ -109,7 +109,7 @@
 
 		function moveToArticle(title)
     {
-			newLocation = "#" + title;
+			newLocation = "#/" + title;
 		}
 
     $('.article-button').click(function(){
@@ -122,18 +122,24 @@
 		});
 
 		$(window).on('hashchange', function() {
-		  var hash = location.hash.substr(1);
+      if(location.hash[1] == '/')
+      {
+        var hash = location.hash.substr(2);
+      }
+      else{
+        var hash = location.hash.substr(1);
+      }
 		  getFirstParagraph(hash);
 		  moveToArticle(hash);
 
       $.each( $(".article-button"), function( key, value ) {
         //alert( key + ": " + value );
-        if(value.hash.substr(1) == hash)
+        if(value.hash.substr(2) == hash)
         {
           $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
               var items = [];
               $.each( data.query.random, function( key, article ) {
-                items.push( "<div class='large-12 medium-12 small-12 columns'><a href='#" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button-container article-button button secondary expand'>" + article.title + "</a></div>" );
+                items.push( "<div class='large-12 medium-12 small-12 columns'><a href='#/" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button-container article-button button secondary expand'>" + article.title + "</a></div>" );
               });
 
               $( "<div/>", {
@@ -145,6 +151,28 @@
         }
       });
 		});
+
+    function keyPress(e)
+    {
+
+      if (!e) e=window.event;
+      var key=e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0; 
+      
+      if(key == 39 || key == 100) 
+      { 
+        findRandomArticle();
+      } 
+      else if(key == 37 || key == 97) {
+         history.back()
+      }
+      else if(key == 13) {
+        //alert($("link-to-wiki").attr('href'));
+        window.open($("#link-to-wiki").attr('href'));
+      }
+      return true; 
+    }
+
+    document.onkeypress = keyPress;
 
 
     

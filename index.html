@@ -27,32 +27,17 @@
   				<a class="random-button button" href="#">Random!</a>
   			</li>
   		</ul>
-  		<section class="top-bar-section">
-  			<!-- Right Nav Section -->
-  			<!-- <ul class="right">
-  				<li class="active"><a href="#">Right Button Active</a></li>
-  				<li class="has-dropdown">
-  					<a href="#">Right Button Dropdown</a>
-  					<ul class="dropdown">
-  						<li><a href="#">First link in dropdown</a></li>
-  					</ul>
-  				</li> 
-  			</ul>-->
-
-  			<!-- Left Nav Section -->
-  			<ul class="left">
-  				<li><a>Smash count: <span id="smash">0</span></a></li>
-  			</ul>
-  		</section>
   	</nav>
     
     <div class="row main">
       <div id="main" class="large-8 medium-8 small-12 columns">
       	<div id="wiki-article">
+          Loading Wikipedia article...
       	</div>
       	<a class="random-button button expand" href="#">Smash a random article!</a>
       </div>
       <div id="article-list" class="large-4 medium-4 small-12 columns">
+        <p>Smash count: <span id="smash">0</span></p>
       	<p>Some carefully curated articles for your smashing enjoyment:</p>
       </div>
     </div>
@@ -74,7 +59,7 @@
 	    $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=6&callback=?", function( data ) {
 	    		var items = [];
 	    		$.each( data.query.random, function( key, article ) {
-						items.push( "<div class='large-12 medium-12 small-12 columns'><a href='#" + article.title + "' id='" + article.id + "' name='" + article.title + "' class='button secondary expand'>" + article.title + "</a></div>" );
+						items.push( "<div class='article-button-container large-12 medium-12 small-12 columns'><a href='#" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a></div>" );
 					});
 
 					$( "<div/>", {
@@ -84,15 +69,16 @@
 	    });
     });
 
-    function findRandomArticle()
+    function findRandomArticle(redirect = true)
     {
     	var title;
     	$.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
 	    		title = data.query.random[0]["title"];
-	    		window.location.href = "#" + title;
-	    		//getFirstParagraph();
+          if (redirect){
+            window.location.href = "#" + title;
+          }
+          return title;
 	    });
-	    return title;
     }
 
     function getFirstParagraph(title)
@@ -101,7 +87,6 @@
 
   			var items = [];
 
-  			//var content = data.parse.text["*"];
   			for (var key in data.query.pages) {
 				    articleID = data.query.pages[key];
 				    articleTitle = data.query.pages[key].title;
@@ -113,7 +98,7 @@
 				items.push( "<div id='text'>" + content + "<p><a href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>Read more on Wikipedia...</a></p></div><hr>" );
 
 				$("#wiki-article").contents().remove();
-				$( "<div/>", {"id": articleTitle, html: items.join( "" )}).appendTo( "#wiki-article" );
+				$( "<div/>", {html: items.join( "" )}).appendTo( "#wiki-article" );
 
 				//add one to smash count
 				smashCount = $("#smash").html();
@@ -127,15 +112,38 @@
 			newLocation = "#" + title;
 		}
 
+    $('.article-button').click(function(){
+      $(this).remove;
+    });
+
+
     $('.random-button').click(function(){
 			findRandomArticle();		
-			//return false;
 		});
 
 		$(window).on('hashchange', function() {
 		  var hash = location.hash.substr(1);
 		  getFirstParagraph(hash);
 		  moveToArticle(hash);
+
+      $.each( $(".article-button"), function( key, value ) {
+        //alert( key + ": " + value );
+        if(value.hash.substr(1) == hash)
+        {
+          $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
+              var items = [];
+              $.each( data.query.random, function( key, article ) {
+                items.push( "<div class='large-12 medium-12 small-12 columns'><a href='#" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button-container article-button button secondary expand'>" + article.title + "</a></div>" );
+              });
+
+              $( "<div/>", {
+                "class": "article-list",
+                html: items.join( "" )
+              }).appendTo( "#article-list" );
+          });
+          $( ".article-button-container" ).remove( ":contains('" + hash + "')" );
+        }
+      });
 		});
 
 

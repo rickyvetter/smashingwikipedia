@@ -1,4 +1,4 @@
-smashingwikipedia
+Smashing Wikipedia
 =================
 
 Smashing Wikipedia is an app that cuts Wikipedia articles down to size. You can load random articles, pick from those listed in the sidebar, or view your own by replacing the article name in the URL with the name of the article (i.e. rickyvetter.com/smashingwikipedia/#/Richard Nixon).
@@ -15,10 +15,10 @@ Features:
 Functionality:
 --------------
 * Responsive design for on mobile and laptop/desktop
-** Tested on Firefox, Chrome, IE9+, Windows Phone, iPhone
-** Should work on Android, Opera
-* Ignore user chatter/talk (check out namespaces in the API)
-* Link to main article
+* Tested on Firefox, Chrome, IE9+, Windows Phone, iPhone
+* Should work on Android, Opera
+* Ignores user chatter/talk (check out namespaces in the API)
+* Links to main article
 * Can be used with only key strokes
 * ~~Can be used with swipe~~ removed because of prevent default on gesture libraries made scrolling difficult.
 

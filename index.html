@@ -31,7 +31,15 @@
     <div class="row about">
       <div id="about" class="panel large-12 medium-12 small-12 columns">
         <h4>About</h4>
-        <p>Smashing Wikipedia is all about a convenient way to browse and skim random Wiki articles. Use the <b>arrow keys</b>, <b>A and D</b>, or click a random button to load the next article. Use <b>1-6</b> to load one of the pre-selected articles, or click on the title you find interesting. Press <b>Enter</b> to go to the full Wikipedia page for the topic you are currently looking at.</p>
+        <p>Smashing Wikipedia is an app that cuts Wikipedia articles down to size. You can load random articles, pick from those listed in the sidebar, or view your own by replacing the article name in the URL with the name of the article (i.e. <a href="#/Richard Nixon">rickyvetter.com/smashingwikipedia/#/Richard Nixon</a>).</p>
+        <dl>
+          <dt>New Article (Random)</dt>
+          <dd>→, D</dd>
+          <dt>New Article (From Side Bar)</dt>
+          <dd>1-6</dd>
+          <dt>Back to Old Article</dt>
+          <dd>←, A</dd>
+        </dl>
         <a class="about-button button">Great, let's get back to smashing!</a>
       </div>
     </div>
@@ -54,172 +62,9 @@
     <script>
       $(document).foundation();
     </script>
-    <!-- touch events -->
-    <script src="js/vendor/hammer.min.js"></script>
-    <script>
-      var firstP = true;
-
-      $(document).ready(function(){
-        findRandomArticle();
-      });
-
-      $(document).ready(function(){
-        $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=6&callback=?", function( data ) {
-          var items = [];
-          $.each( data.query.random, function( key, article ) {
-          items.push( "<div class='article-button-container large-12 medium-12 small-12 columns'><a href='#/" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a></div>" );
-          });
-          $( "<div/>", {
-            "class": "article-list",
-            html: items.join( "" )
-          }).appendTo( "#article-list" );
-        });
-      });
-
-      function findRandomArticle(redirect)
-      {
-        redirect = typeof redirect !== 'undefined' ? redirect : true;
-        var title;
-        $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
-          title = data.query.random[0]["title"];
-          if (redirect){
-            window.location.href = "#/" + title;
-          }
-          return title;
-        });
-        $('.about').css("display", "none");
-        $('.main').css("display", "block");
-      }
-
-      function getFirstParagraph(title)
-      {
-        $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exlimit=10&exintro=&titles=" + title + "&callback=?", function( data ) {
-          var items = [];
-
-          for (var key in data.query.pages) {
-            articleID = data.query.pages[key];
-            articleTitle = data.query.pages[key].title;
-            articleExtract = data.query.pages[key].extract;
-          }
-
-          // extract or first p?
-          if(firstP)
-          {
-            var articleExtract = $('<div/>').html(articleExtract);
-            var content = articleExtract.find('p:first').prop('outerHTML');
-          }
-          else{
-            var content = articleExtract;
-          }
-
-          items.push( "<div id='title'><h1><a id='link-to-wiki' href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>" + articleTitle + "</a></h1></div>" );
-          items.push( "<div id='text'>" + content + "<p><a href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>Read more on Wikipedia...</a></p></div><hr>" );
-
-          $("#wiki-article").contents().remove();
-          $( "<div/>", {html: items.join( "" )}).appendTo( "#wiki-article" );
-
-  				//add one to smash count
-  				smashCount = $("#smash").html();
-  				smashCount++;
-  				$('#smash').html(smashCount);
-			 });
-      }
-
-      function moveToArticle(title)
-      {
-       newLocation = "#/" + title;
-      }
-
-      // $('.article-button').click(function(){
-      //   $(this).remove;
-      // });
-
-      $('.random-button').click(function(){
-       findRandomArticle();		
-      });
-
-      $('.about-button').click(function(e){
-        $('.about').toggle();
-        $('.main').toggle();
-        e.preventDefault();
-      });
-
-      $(window).on('hashchange', function() {
-        if(location.hash[1] == '/')
-        {
-          var hash = location.hash.substr(2);
-        }
-        else{
-          var hash = location.hash.substr(1);
-        }
-        getFirstParagraph(hash);
-        moveToArticle(hash);
-
-        $.each( $(".article-button"), function( key, value ) {
-          //alert( key + ": " + value );
-          if(value.hash.substr(2) == hash)
-          {
-            $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
-              var items = [];
-              $.each( data.query.random, function( key, article ) {
-                items.push( "<a href='#/" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a>" );
-              });
-
-              $( "<div/>", {
-                "class": "article-button-container large-12 medium-12 small-12 columns",
-                html: items.join( "" )
-              }).appendTo( ".article-list" );
-            });
-            $( ".article-button-container" ).remove( ":contains('" + hash + "')" );
-          }
-        });
-      });
-
-      function keyPress(e)
-      {
-
-        if (!e) e=window.event;
-        var key=e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0; 
-        //alert(key);
-        if(key == 39 || key == 100) 
-        { 
-          findRandomArticle();
-        } 
-        else if(key == 37 || key == 97) {
-         history.back();
-        }
-        else if(key == 13) {
-          //alert($("link-to-wiki").attr('href'));
-          window.open($("#link-to-wiki").attr('href'));
-        }
-        else if(key == 49 || key == 50 || key == 51 || key == 52 || key == 53 || key == 54) {
-          // keys 1-6
-          //alert(key-48);
-          window.location.href = $( ".article-list .article-button-container:nth-child(" + (key-48) + ") a" ).attr('href'); //link from corresponding story
-        }
-        return true; 
-      }
-
-      document.onkeypress = keyPress;
-
-
-
-      var element = document.getElementById('wiki-article');
-      var hammertime = Hammer(element).on("swiperight", function(event) {
-          history.back();
-      });
-      var hammertime2 = Hammer(element).on("swipeleft", function(event) {
-          findRandomArticle();
-      });
-      // $$('.wiki-article').swipeRight(function() {
-      //   // affects "span" children/grandchildren
-      //   history.back();
-      // });
-      // $$('.wiki-article').swipeRight(function() {
-      //   // affects "span" children/grandchildren
-      //   findRandomArticle();
-      // });
-
-    </script>
+    <!-- touch events removed because they prevent default -->
+    <!-- <script src="js/vendor/hammer.min.js"></script> -->
+    <!-- Smashing Wikipedia JavaScript -->
+    <script src="js/smashingwikipedia.js"></script>    
   </body>
 </html>

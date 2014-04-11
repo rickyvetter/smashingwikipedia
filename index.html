@@ -48,8 +48,7 @@
       $(document).foundation();
     </script>
     <script>
-
-    //var articleTitle;
+    var firstP = true;
 
     $(document).ready(function(){
 	    findRandomArticle();
@@ -93,7 +92,16 @@
 				    articleTitle = data.query.pages[key].title;
 				    articleExtract = data.query.pages[key].extract;
 				}
-				var content = articleExtract;
+
+        // extract or first p?
+        if(firstP)
+        {
+          var articleExtract = $('<div/>').html(articleExtract);
+          var content = articleExtract.find('p:first').html();
+        }
+        else{
+          var content = articleExtract;
+        }
 
 				items.push( "<div id='title'><h1><a id='link-to-wiki' href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>" + articleTitle + "</a></h1></div>" );
 				items.push( "<div id='text'>" + content + "<p><a href='http://en.wikipedia.org/wiki/" + articleTitle + "' target='_blank'>Read more on Wikipedia...</a></p></div><hr>" );
@@ -140,13 +148,13 @@
           $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
               var items = [];
               $.each( data.query.random, function( key, article ) {
-                items.push( "<div class='article-button-container large-12 medium-12 small-12 columns'><a href='#/" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a></div>" );
+                items.push( "<a href='#/" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a>" );
               });
 
               $( "<div/>", {
-                "class": "article-list",
+                "class": "article-button-container large-12 medium-12 small-12 columns",
                 html: items.join( "" )
-              }).appendTo( "#article-list" );
+              }).appendTo( ".article-list" );
           });
           $( ".article-button-container" ).remove( ":contains('" + hash + "')" );
         }
@@ -158,7 +166,7 @@
 
       if (!e) e=window.event;
       var key=e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0; 
-      
+      //alert(key);
       if(key == 39 || key == 100) 
       { 
         findRandomArticle();
@@ -169,6 +177,11 @@
       else if(key == 13) {
         //alert($("link-to-wiki").attr('href'));
         window.open($("#link-to-wiki").attr('href'));
+      }
+      else if(key == 49 || key == 50 || key == 51 || key == 52 || key == 53 || key == 54) {
+        // keys 1-6
+        //alert(key-48);
+        window.location.href = $( ".article-list .article-button-container:nth-child(" + (key-48) + ") a" ).attr('href'); //link from corresponding story
       }
       return true; 
     }

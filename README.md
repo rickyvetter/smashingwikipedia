@@ -7,7 +7,7 @@ Features:
 ---------
 * Consumes wikipedia's restful JSON API
 * View random article - 1st paragraph only (or full extract via setting change in the JS)
-* Refresh or select a new random article (refresh by refreshing the page)
+* Refresh or select a new random article
 * Single-page application
 * No page refresh required to update API data
 * Completely client side application

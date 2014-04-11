@@ -20,7 +20,7 @@ Functionality:
 * Ignores user chatter/talk (check out namespaces in the API)
 * Links to main article
 * Can be used with only key strokes
-* ~~Can be used with swipe~~ removed because of prevent default on gesture libraries made scrolling difficult.
+* ~~Can be used with swipe~~ removed because prevent default on gesture libraries made scrolling difficult.
 
 
 Built With:

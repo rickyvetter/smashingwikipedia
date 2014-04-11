@@ -140,7 +140,7 @@
           $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
               var items = [];
               $.each( data.query.random, function( key, article ) {
-                items.push( "<div class='large-12 medium-12 small-12 columns'><a href='#/" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button-container article-button button secondary expand'>" + article.title + "</a></div>" );
+                items.push( "<div class='article-button-container large-12 medium-12 small-12 columns'><a href='#/" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a></div>" );
               });
 
               $( "<div/>", {

@@ -77,6 +77,8 @@ function getFirstParagraph(title)
 function moveToArticle(title)
 {
  newLocation = "#/" + title;
+ //back up to the top!
+ window.scrollTo(0, 0);
 }
 
 $(window).on('hashchange', function() {

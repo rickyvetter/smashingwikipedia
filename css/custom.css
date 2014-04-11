@@ -1,0 +1,30 @@
+.top-bar{
+	margin-bottom:25px;
+}
+
+
+
+.top-bar .topbar-always {
+    position: absolute;
+    right: 0;
+    top: 0; }
+    .top-bar .topbar-always a {
+      color: white;
+      text-transform: uppercase;
+      font-size: 0.8125rem;
+      font-weight: bold;
+      position: relative;
+      display: block;
+      padding: 0 15px;
+      height: 45px;
+      line-height: 45px; }
+      .top-bar .topbar-always .button{
+      top:0;
+      display:inline-block; }
+      .top-bar .topbar-always .secondary{
+      background-color:rgba(0, 0, 0, 0); }
+      .top-bar .topbar-always .secondary:hover, .top-bar .topbar-always .secondary:focus{
+      background-color:rgba(0, 0, 0, 0.5);
+      color:white; }
+
+.about{display: none;}

@@ -14,7 +14,9 @@ Features:
 
 Functionality:
 --------------
-* Usable on mobile and laptop/desktop, IE10+ (Responsive and Cross Browser)
+* Responsive design for on mobile and laptop/desktop
+** Tested on Firefox, Chrome, IE9+, Windows Phone, iPhone
+** Should work on Android, Opera
 * Ignore user chatter/talk (check out namespaces in the API)
 * Link to main article
 * Can be used with only key strokes

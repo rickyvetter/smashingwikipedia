@@ -85,6 +85,8 @@
           }
           return title;
         });
+        $('.about').css("display", "none");
+        $('.main').css("display", "block");
       }
 
       function getFirstParagraph(title)
@@ -135,7 +137,8 @@
       });
 
       $('.about-button').click(function(){
-        $('.about').toggle();   
+        $('.about').toggle();
+        $('.main').toggle();
       });
 
       $(window).on('hashchange', function() {

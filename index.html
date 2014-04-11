@@ -55,7 +55,7 @@
       $(document).foundation();
     </script>
     <!-- touch events -->
-    <script src="js/vendor/quo.js"></script>
+    <script src="js/vendor/hammer.min.js"></script>
     <script>
       var firstP = true;
 
@@ -204,21 +204,21 @@
 
 
 
-      // var element = document.getElementById('wiki-article');
-      // var hammertime = Hammer(element).on("swiperight", function(event) {
-      //     history.back();
-      // });
-      // var hammertime2 = Hammer(element).on("swipeleft", function(event) {
-      //     findRandomArticle();
-      // });
-      $$('.wiki-article').swipeRight(function() {
-        // affects "span" children/grandchildren
-        history.back();
+      var element = document.getElementById('wiki-article');
+      var hammertime = Hammer(element).on("swiperight", function(event) {
+          history.back();
       });
-      $$('.wiki-article').swipeRight(function() {
-        // affects "span" children/grandchildren
-        findRandomArticle();
+      var hammertime2 = Hammer(element).on("swipeleft", function(event) {
+          findRandomArticle();
       });
+      // $$('.wiki-article').swipeRight(function() {
+      //   // affects "span" children/grandchildren
+      //   history.back();
+      // });
+      // $$('.wiki-article').swipeRight(function() {
+      //   // affects "span" children/grandchildren
+      //   findRandomArticle();
+      // });
 
     </script>
   </body>

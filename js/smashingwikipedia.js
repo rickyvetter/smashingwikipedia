@@ -97,7 +97,7 @@ $(window).on('hashchange', function() {
   $.each( $(".article-button"), function( key, value ) {
     if(value.hash.substr(2) == hash)
     {
-      $.getJSON( apiBase + "actionaction=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
+      $.getJSON( apiBase + "action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
         var items = [];
         $.each( data.query.random, function( key, article ) {
           items.push( "<a href='#/" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a>" );

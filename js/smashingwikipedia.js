@@ -139,12 +139,11 @@ function keyPress(e)
 
     if (!e) e=window.event;
     var key=e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0; 
-
-    if(key == 39 || key == 100) 
+    if(key == 39 || key == 68) 
     { 
       findRandomArticle();
     } 
-    else if(key == 37 || key == 97) {
+    else if(key == 37 || key == 65) {
      history.back();
     }
     else if(key == 13) {

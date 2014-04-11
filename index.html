@@ -54,6 +54,8 @@
     <script>
       $(document).foundation();
     </script>
+    <!-- touch events -->
+    <script src="js/vendor/hammer.min.js"></script>
     <script>
       var firstP = true;
 
@@ -128,17 +130,18 @@
        newLocation = "#/" + title;
       }
 
-      $('.article-button').click(function(){
-        $(this).remove;
-      });
+      // $('.article-button').click(function(){
+      //   $(this).remove;
+      // });
 
       $('.random-button').click(function(){
        findRandomArticle();		
       });
 
-      $('.about-button').click(function(){
+      $('.about-button').click(function(e){
         $('.about').toggle();
         $('.main').toggle();
+        e.preventDefault();
       });
 
       $(window).on('hashchange', function() {
@@ -159,7 +162,7 @@
             $.getJSON( "http://en.wikipedia.org/w/api.php?action=query&list=random&format=json&rnnamespace=0&rnlimit=1&callback=?", function( data ) {
               var items = [];
               $.each( data.query.random, function( key, article ) {
-                items.push( "<a href='#/" + encodeURI(article.title) + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a>" );
+                items.push( "<a href='#/" + article.title + "' id='" + article.title + "' class='article-button button secondary expand'>" + article.title + "</a>" );
               });
 
               $( "<div/>", {
@@ -183,7 +186,7 @@
           findRandomArticle();
         } 
         else if(key == 37 || key == 97) {
-         history.back()
+         history.back();
         }
         else if(key == 13) {
           //alert($("link-to-wiki").attr('href'));
@@ -198,6 +201,16 @@
       }
 
       document.onkeypress = keyPress;
+
+
+
+      var element = document.getElementById('wiki-article');
+      var hammertime = Hammer(element).on("swiperight", function(event) {
+          history.back();
+      });
+      var hammertime2 = Hammer(element).on("swipeleft", function(event) {
+          findRandomArticle();
+      });
 
     </script>
   </body>
